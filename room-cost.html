@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+    <title>Hello, world!</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      p {
+        margin-bottom: 0;
+      }
+      div * {
+        padding-right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-8">
+          <div class="row">
+            <div class="col-12 col-md-6 mt-3">
+              <label for="sqfeet">sq. ft. area</label>
+              <input type="number" class="form-control" id="sqfeet" placeholder="enter sqfeet area between 500 to 3000" onchange="validate(this.value,500,3000,'alertsqft')" required />
+              <p id="alertsqft" class="text-danger"></p>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <label for="utitlity">Utitlity area sq. ft.</label>
+              <input type="number" class="form-control" id="utitlity" placeholder="enter utility area between 100 to 500" onchange="validate(this.value,100,500,'alertuitility')" required />
+              <p id="alertuitility" class="text-danger"></p>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <label for="carparking">No of car parking(130sq. ft./unit)</label>
+              <input type="number" class="form-control" id="carparking" placeholder="enter car parkig between 1 to 4" onchange="validate(this.value,1,4,'alertcar')" required />
+              <p id="alertcar" class="text-danger"></p>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <label for="carparking">Material quality</label>
+              <select class="form-control" id="materialqt" required>
+                <option value="basic">Basic</option>
+                <option value="midrange">Mid Range</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center mt-5">
+        <div class="col-6 col-md-3 text-white" onclick="calculatecost()">
+          <p class="text-center bg-primary">calculate</p>
+        </div>
+      </div>
+      <p class="text-center text-danger mt-2" id="alertmsg"></p>
+      <div class="mt-5" id="costcontainer" style="display: none">
+        <div class="row d-flex justify-content-center">
+          <div class="col-12 col-md-4 bg-warning">
+            <p class="bg-dark text-white" style="padding: 0">Budget Package - ₹<span id="budgetpackage"></span>/sq.ft (Incl. GST)</p>
+            <div class="mt-2">
+              <div class="d-flex justify-content-between">
+                <p>Built Up Cost</p>
+                <p id="builtcost"></p>
+              </div>
+              <p><span id="buildarea"></span> sq.ft * ₹<span id="builtcharges"></span>/sq.ft</p>
+            </div>
+            <div class="mt-2">
+              <div class="w-100 d-flex justify-content-between">
+                <p>Car parking cost</p>
+                <p id="parkingcosttotal"></p>
+              </div>
+              <p><span id="noofcars"></span>*130 sq.ft * ₹<span id="costofparking"></span>/sq.ft</p>
+            </div>
+            <div class="mt-2">
+              <div class="d-flex justify-content-between">
+                <p>balcony & utility cost</p>
+                <p id="balconytotal"></p>
+              </div>
+              <p><span id="balconyarea"></span> sq.ft * ₹<span id="balconycharges"></span>/sq.ft</p>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between">
+              <p>Total Cost</p>
+              <p>₹<span id="totalcost"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+      function validate(value, min, max, alertname) {
+        console.log(value + " " + min + " " + max + " " + alertname);
+        if (!value || value < min || value > max) {
+          document.getElementById(alertname).innerHTML = `Enter value between ${min} and ${max}`;
+        } else {
+          document.getElementById(alertname).innerHTML = "";
+        }
+      }
+      function calculatecost() {
+        const basic = [1790, 1074, 1074];
+        const midrange = [1890, 1134, 1134];
+        const high = [1980, 1180, 1180];
+
+        var sqfeet = document.getElementById("sqfeet").value;
+        var uitlity = document.getElementById("utitlity").value;
+        var carparking = document.getElementById("carparking").value;
+        var materialqt = document.getElementById("materialqt").value;
+
+        if (!sqfeet) {
+          document.getElementById("alertsqft").innerHTML = "Enter sqfeet area between 500 to 3000";
+        } else {
+          document.getElementById("alertsqft").innerHTML = "";
+          validate(sqfeet, 500, 3000, "alertsqft");
+        }
+
+        if (!uitlity) {
+          document.getElementById("alertuitility").innerHTML = "Enter Utility area between 100 to 500";
+        } else {
+          document.getElementById("alertuitility").innerHTML = "";
+          validate(uitlity, 100, 500, "alertuitility");
+        }
+
+        if (!carparking) {
+          document.getElementById("alertcar").innerHTML = "Enter requiered parking between 1 to 4";
+        } else {
+          document.getElementById("alertcar").innerHTML = "";
+          validate(carparking, 1, 4, "alertcar");
+        }
+
+        if (sqfeet > 500 && sqfeet < 3000 && uitlity >= 100 && uitlity < 500 && carparking > 1 && carparking < 4) {
+          document.getElementById("costcontainer").style.display = "block";
+        } else {
+          document.getElementById("costcontainer").style.display = "none";
+        }
+
+        if (materialqt === "basic") {
+          document.getElementById("budgetpackage").innerHTML = basic[0];
+          document.getElementById("builtcharges").innerHTML = basic[0];
+          document.getElementById("buildarea").innerHTML = sqfeet;
+          document.getElementById("builtcost").innerHTML = basic[0] * sqfeet;
+          document.getElementById("noofcars").innerHTML = carparking;
+          document.getElementById("costofparking").innerHTML = basic[1];
+          document.getElementById("parkingcosttotal").innerHTML = basic[1] * 130 * carparking;
+          document.getElementById("balconytotal").innerHTML = basic[2] * uitlity;
+          document.getElementById("balconyarea").innerHTML = uitlity;
+          document.getElementById("balconycharges").innerHTML = basic[2];
+          document.getElementById("totalcost").innerHTML = basic[0] * sqfeet + basic[1] * 130 * carparking + basic[2] * uitlity;
+        } else if (materialqt === "midrange") {
+          document.getElementById("budgetpackage").innerHTML = midrange[0];
+          document.getElementById("builtcharges").innerHTML = midrange[0];
+          document.getElementById("buildarea").innerHTML = sqfeet;
+          document.getElementById("builtcost").innerHTML = midrange[0] * sqfeet;
+          document.getElementById("noofcars").innerHTML = carparking;
+          document.getElementById("costofparking").innerHTML = midrange[1];
+          document.getElementById("parkingcosttotal").innerHTML = midrange[1] * 130 * carparking;
+          document.getElementById("balconytotal").innerHTML = midrange[2] * uitlity;
+          document.getElementById("balconyarea").innerHTML = uitlity;
+          document.getElementById("balconycharges").innerHTML = midrange[2];
+          document.getElementById("totalcost").innerHTML = midrange[0] * sqfeet + midrange[1] * 130 * carparking + midrange[2] * uitlity;
+        } else if (materialqt === "high") {
+          document.getElementById("budgetpackage").innerHTML = high[0];
+          document.getElementById("builtcharges").innerHTML = high[0];
+          document.getElementById("buildarea").innerHTML = sqfeet;
+          document.getElementById("builtcost").innerHTML = high[0] * sqfeet;
+          document.getElementById("noofcars").innerHTML = carparking;
+          document.getElementById("costofparking").innerHTML = high[1];
+          document.getElementById("parkingcosttotal").innerHTML = high[1] * 130 * carparking;
+          document.getElementById("balconytotal").innerHTML = high[2] * uitlity;
+          document.getElementById("balconyarea").innerHTML = uitlity;
+          document.getElementById("balconycharges").innerHTML = high[2];
+          document.getElementById("totalcost").innerHTML = high[0] * sqfeet + high[1] * 130 * carparking + high[2] * uitlity;
+        } else {
+          console.log("data not matching");
+        }
+      }
+    </script>
+  </body>
+</html>
